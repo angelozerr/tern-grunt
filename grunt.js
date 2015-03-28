@@ -14,9 +14,7 @@
       if (file.name === "[doc]" || file.name === "Gruntfile.js") {
         var fnType = file.scope.exports && file.scope.exports.getFunctionType();
         if (fnType) {
-          var cx = infer.cx(), paths = cx.paths;
-          var deps = [];
-          deps[0] = cx.definitions.grunt.Grunt;
+          var cx = infer.cx(), deps = [cx.definitions.grunt.Grunt];
           fnType.propagate(new infer.IsCallee(infer.cx().topScope, deps, null, infer.Null))
         }
       }
