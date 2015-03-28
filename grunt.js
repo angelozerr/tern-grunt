@@ -9,7 +9,6 @@
   "use strict";
 
   tern.registerPlugin("grunt", function(server, options) {
-
     return {
       defs : defs
     };
@@ -25,6 +24,10 @@
         return {};
       }        
     }
+  });
+  
+  infer.registerFunction("grunt_registerTask", function(self, args, argNodes) {
+    console.error(args)
   });
 
   var defs = {
@@ -113,8 +116,21 @@
           registerTask : {
             "!type" : "fn(taskName: string, taskList: [string])",
             "!doc" : "Register an 'alias task' or a task function. This method supports the following two signatures:",
-            "!url" : "http://gruntjs.com/api/grunt.task.registerTask",
+            "!url" : "http://gruntjs.com/api/grunt.task#grunt.task.registertask",
+            "!effects": ["custom grunt_registerTask"]
+          },
+          registerMultiTask : {
+            "!type" : "fn(taskName: string, description: string, taskFunction: fn())",
+            "!doc" : "Register an 'alias task' or a task function. This method supports the following two signatures:",
+            "!url" : "hhttp://gruntjs.com/api/grunt.task#grunt.task.registermultitask",
+            "!effects": ["custom grunt_registerTask"]
           }
+        },
+        registerTask: {
+          "!type": "Grunt.task.registerTask"
+        },
+        registerMultiTask: {
+          "!type": "Grunt.task.registerMultiTask"
         },
         fail : {
           "!doc" : "For when something goes horribly wrong.",
