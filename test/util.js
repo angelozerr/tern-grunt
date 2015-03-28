@@ -2,6 +2,7 @@
 
 var fs = require("fs"), path = require("path"), tern = require("tern"), assert = require('assert');
 require("../grunt.js");
+require("tern/plugin/node")
 
 var projectDir = path.resolve(__dirname, "..");
 var resolve = function(pth) {
@@ -22,7 +23,7 @@ var defaultQueryOptions = {
 }
 
 function createServer(defs, options) {
-	var plugins = {};
+	var plugins = {'node': {}};
 	if (options) plugins['grunt'] = options; else plugins['grunt'] = {};
 	var server = new tern.Server({
 		plugins : plugins,
@@ -43,11 +44,11 @@ exports.assertCompletion = function(text, expected, name) {
 	var queryOptions = defaultQueryOptions;
 
 	var server = createServer(defs, {});
-	server.addFile("test1.js", text);
+	server.addFile("Gruntfile.js", text);
 	server.request({
 		query : {
 			type: "completions",
-			file: "test1.js",
+			file: "Gruntfile.js",
 			end: text.length,
 			types: queryOptions.types,
 			docs: queryOptions.docs,
@@ -55,7 +56,8 @@ exports.assertCompletion = function(text, expected, name) {
 			origins: queryOptions.origins,
 			caseInsensitive: true,
 			lineCharPositions: true,
-			expandWordForward: false
+			expandWordForward: false,
+			guess: false
 		}
 	}, function(err, resp) {
 		if (err)

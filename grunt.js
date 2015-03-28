@@ -9,6 +9,19 @@
   "use strict";
 
   tern.registerPlugin("grunt", function(server, options) {
+    
+    server.on("afterLoad", function(file) {
+      if (file.name === "[doc]" || file.name === "Gruntfile.js") {
+        var fnType = file.scope.exports && file.scope.exports.getFunctionType();
+        if (fnType) {
+          var cx = infer.cx(), paths = cx.paths;
+          var deps = [];
+          deps[0] = cx.definitions.grunt.Grunt;
+          fnType.propagate(new infer.IsCallee(infer.cx().topScope, deps, null, infer.Null))
+        }
+      }
+    });
+    
     return {
       defs : defs
     };
@@ -149,8 +162,7 @@
           }
         }
       }
-    },
-    grunt : "Grunt"
+    }
   }
 
 });
