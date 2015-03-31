@@ -74,6 +74,22 @@ CodeMirror.tern.addDef = function(def) {
     <form>
     <input type="button" onclick="javascript:getGruntTasks();" value="Tasks"/>
     <textarea id="code" name="code">module.exports = function(grunt) {
+    
+    grunt.initConfig({
+      jshint: {
+        files: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
+        options: {
+          globals: {
+            jQuery: true
+          }
+        }
+      },
+      watch: {
+        files: ['<%= jshint.files %>'],
+        tasks: ['jshint']
+      }
+    });
+    
 	grunt.registerTask('default', ['jshint']);
 }	
 </textarea></form>
