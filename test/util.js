@@ -79,3 +79,62 @@ exports.assertCompletion = function(text, expected, name) {
         }
 	});
 }
+
+exports.assertTasks = function(text, expected, filename) {
+  var defs = [];
+  var defNames = ["ecma5"]; 
+  if (defNames) {
+      for (var i = 0; i < defNames.length; i++) {
+          var def = allDefs[defNames[i]];
+          defs.push(def);
+      }
+  }
+  var queryOptions = defaultQueryOptions;
+  filename = filename || "Gruntfile.js";
+  
+  var server = createServer(defs, {});
+  server.addFile(filename, text);
+  server.request({
+      query : {
+          type: "grunt-tasks",
+          file: filename
+      }
+  }, function(err, resp) {
+      if (err)
+          throw err;
+      var actualMessages = resp.messages;
+      var expectedMessages = expected.messages;
+
+      assert.equal(JSON.stringify(resp), JSON.stringify(expected)); 
+  });
+}
+
+exports.assertTask = function(text, taskName, expected, filename) {
+  var defs = [];
+  var defNames = ["ecma5"]; 
+  if (defNames) {
+      for (var i = 0; i < defNames.length; i++) {
+          var def = allDefs[defNames[i]];
+          defs.push(def);
+      }
+  }
+  var queryOptions = defaultQueryOptions;
+  filename = filename || "Gruntfile.js";
+  
+  var server = createServer(defs, {});
+  server.addFile(filename, text);
+  server.request({
+      query : {
+          type: "grunt-task",
+          file: filename,
+          name: taskName
+      }
+  }, function(err, resp) {
+      if (err)
+          throw err;
+      var actualMessages = resp.messages;
+      var expectedMessages = expected.messages;
+
+      assert.equal(JSON.stringify(resp), JSON.stringify(expected)); 
+  });
+}
